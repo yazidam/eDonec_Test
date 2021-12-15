@@ -1,10 +1,14 @@
 const User = require("../models/userModel");
 const generateToken = require("../utils/generateToken");
 const bcrypt = require("bcryptjs");
+const { validationResult } = require("express-validator");
 
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
-
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   const userExist = await User.findOne({ email });
   if (userExist) {
     res.status(400);

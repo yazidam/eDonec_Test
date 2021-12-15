@@ -6,8 +6,9 @@ const {
   getUserProfile,
   logOut,
 } = require("../controllers/userController");
+const { validRegister } = require("../middleware/validation");
 
-router.post("/", registerUser);
+router.post("/", validRegister, registerUser);
 router.post("/login", authUser);
 router.route("/profile").get(getUserProfile);
 router.get("/logout", logOut);
