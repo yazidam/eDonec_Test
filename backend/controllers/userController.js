@@ -72,8 +72,14 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+const logOut = async (req, res) => {
+  res.status(200).send({ token: null, msg: "Logout" });
+  console.log("user logout");
+};
+
 module.exports = {
   registerUser,
   authUser,
   getUserProfile,
+  logOut,
 };
