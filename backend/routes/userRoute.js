@@ -7,11 +7,16 @@ const {
   logOut,
   updateUserProfile,
 } = require("../controllers/userController");
+const protect = require("../middleware/authMiddleware");
 const { validRegister } = require("../middleware/validation");
 
 router.post("/", validRegister, registerUser);
 router.post("/login", authUser);
-router.route("/profile").get(getUserProfile).put(updateUserProfile);
+router
+  .route("/profile")
+  .get(protect, getUserProfile)
+  .put(protect, updateUserProfile);
+
 router.get("/logout", logOut);
 
 module.exports = router;
