@@ -20,7 +20,18 @@ const getProducts = async (req, res) => {
   const products = await Product.find({});
   res.json(products);
 };
+const deleteProduct = async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (product) {
+    await product.remove();
+    res.json({ message: "product removed" });
+  } else {
+    res.status(404);
+    throw new Error("product dont found");
+  }
+};
 module.exports = {
   createProduct,
   getProducts,
+  deleteProduct,
 };
