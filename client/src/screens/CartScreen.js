@@ -10,7 +10,7 @@ import {
   Button,
   Form,
 } from "react-bootstrap";
-import { addToCart } from "../actions/cartActions";
+import { addToCart, removeFromCart } from "../actions/cartActions";
 
 const CartScreen = () => {
   const productId = useParams();
@@ -19,7 +19,6 @@ const CartScreen = () => {
   let navigate = useNavigate();
   let location = useLocation();
   const qty = location.search ? Number(location.search.split("=")[1]) : 1;
-  console.log("qty", qty);
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
@@ -30,6 +29,10 @@ const CartScreen = () => {
     }
   }, [dispatch, productId, qty]);
 
+  const removeFromeCartHandeler = (id) => {
+    dispatch(removeFromCart(id));
+    console.log("remove");
+  };
   const checkoutHandler = () => {
     //if he not login in refiret to login page else to shipping
   };
@@ -67,6 +70,17 @@ const CartScreen = () => {
                         </option>
                       ))}
                     </Form.Control>
+                  </Col>
+                  <Col md={2}>
+                    <Button
+                      type="button"
+                      variant="light"
+                      onClick={() => {
+                        removeFromeCartHandeler(item.product);
+                      }}
+                    >
+                      <i className="fas fa-trash"></i>
+                    </Button>
                   </Col>
                 </Row>
               </ListGroup.Item>
