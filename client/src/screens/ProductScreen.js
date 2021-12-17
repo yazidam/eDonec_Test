@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { listProductDetails } from "../actions/productActions";
 
 import { Link } from "react-router-dom";
@@ -16,11 +16,11 @@ import {
 import Rating from "../components/Rating";
 import Loader from "../components/Loader";
 
-const ProductScreen = ({ history }) => {
+const ProductScreen = () => {
   const idUrl = useParams();
   console.log("idUrll", idUrl.id);
   const [qty, setQty] = useState(1);
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
@@ -29,7 +29,7 @@ const ProductScreen = ({ history }) => {
   }, [dispatch, idUrl]);
 
   const addToCartHandler = () => {
-    history.push(`/cart/${idUrl.id}?qty=${qty}`);
+    navigate(`/cart/${idUrl.id}?qty=${qty}`);
   };
   return (
     <>
