@@ -31,10 +31,10 @@ const CartScreen = () => {
 
   const removeFromeCartHandeler = (id) => {
     dispatch(removeFromCart(id));
-    console.log("remove");
   };
   const checkoutHandler = () => {
-    //if he not login in refiret to login page else to shipping
+    //if he not login in rediret to login page else to shipping
+    navigate("/login?redirect=shipping");
   };
   return (
     <Row>
