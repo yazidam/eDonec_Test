@@ -5,6 +5,7 @@ import { Row, Col } from "react-bootstrap";
 
 import Product from "../components/Product";
 import Loader from "../components/Loader";
+import ProductCarousel from "../components/ProductCarousel";
 const HomeScreen = () => {
   const dispatch = useDispatch();
   const productList = useSelector((state) => state.productList);
@@ -16,6 +17,7 @@ const HomeScreen = () => {
 
   return (
     <>
+      <ProductCarousel />
       <h1 style={{ display: "flex", justifyContent: "center" }}>
         Lates products
       </h1>
