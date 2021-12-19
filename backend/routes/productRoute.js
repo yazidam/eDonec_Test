@@ -6,8 +6,9 @@ const {
   deleteProduct,
   getProductById,
 } = require("../controllers/productController");
+const admin = require("../middleware/adminMidleware");
 const protect = require("../middleware/authMiddleware");
 
 router.route("/").get(getProducts).post(protect, createProduct);
-router.route("/:id").get(getProductById).delete(protect, deleteProduct);
+router.route("/:id").get(getProductById).delete(protect, admin, deleteProduct);
 module.exports = router;
