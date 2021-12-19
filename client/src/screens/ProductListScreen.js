@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import { useNavigate } from "react-router-dom";
 
-import { listProducts } from "../actions/productActions";
+import { listProducts, deleteProduct } from "../actions/productActions";
 
 const ProductListScreen = () => {
   const dispatch = useDispatch();
@@ -17,16 +17,20 @@ const ProductListScreen = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const productDelete = useSelector((state) => state.productDelete);
+  const { success: successDelete } = productDelete;
+
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
       dispatch(listProducts());
     } else {
       navigate("/login");
     }
-  }, [dispatch, userInfo]);
+  }, [dispatch, userInfo, successDelete]);
 
   const deletHandeler = (id) => {
     if (window.confirm("Are you sure")) {
+      dispatch(deleteProduct(id));
     }
   };
 
