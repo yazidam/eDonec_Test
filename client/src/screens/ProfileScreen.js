@@ -3,14 +3,15 @@ import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import { getUserdetails } from "../actions/userActions";
+import { getUserdetails, updateUserProfile } from "../actions/userActions";
 const ProfileScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmpassword] = useState("");
   const [name, setName] = useState("");
-  const [message, setMassage] = useState(null);
   let navigate = useNavigate();
   const dispatch = useDispatch();
   const userDetails = useSelector((state) => state.userDetails);
@@ -35,9 +36,26 @@ const ProfileScreen = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     if (password !== confirmpassword) {
-      setMassage("password do not match");
+      toast.error("password do not match", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } else {
-      //update prodile
+      dispatch(updateUserProfile({ id: user._id, name, email, password }));
+      toast.success("update successful", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
   return (
@@ -45,7 +63,6 @@ const ProfileScreen = () => {
       <Col md={3}>
         <h2> User Profile</h2>
         {error && <h2>verifier votre coordonner {error}</h2>}
-        {error && <h1>{message}</h1>}
         {loading && <Loader />}
         <Form onSubmit={submitHandler}>
           <Form.Group controlId="name">
@@ -91,7 +108,7 @@ const ProfileScreen = () => {
             type="submit"
             variant="primary"
             className="my-3 "
-            disabled={email.length < 10}
+            disabled={password.length < 6}
           >
             Update
           </Button>
@@ -100,6 +117,7 @@ const ProfileScreen = () => {
       <Col md={9}>
         <h2>My Oreders</h2>
       </Col>
+      <ToastContainer />
     </Row>
   );
 };
