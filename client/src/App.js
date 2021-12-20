@@ -10,6 +10,7 @@ import ShippingScreen from "./screens/ShippingScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import ProductListScreen from "./screens/ProductListScreen";
+import ProductEditScreen from "./screens/ProductEditScreen";
 function App() {
   return (
     <BrowserRouter>
@@ -18,6 +19,10 @@ function App() {
         <Routes>
           <Route path="/" element={<HomeScreen />} />
           <Route path="/product/:id" element={<ProductScreen />} />
+          <Route
+            path="/admin/product/:id/edit"
+            element={<ProductEditScreen />}
+          />
           <Route path="/cart/:id/*" element={<CartScreen />} />
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/shipping" element={<ShippingScreen />} />
