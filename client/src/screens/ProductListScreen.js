@@ -5,7 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import { useNavigate } from "react-router-dom";
 
-import { listProducts, deleteProduct } from "../actions/productActions";
+import {
+  listProducts,
+  deleteProduct,
+  createProduct,
+} from "../actions/productActions";
+import { PRODUCT_CREATE_RESET } from "../constants/productConstants";
 
 const ProductListScreen = () => {
   const dispatch = useDispatch();
@@ -20,13 +25,24 @@ const ProductListScreen = () => {
   const productDelete = useSelector((state) => state.productDelete);
   const { success: successDelete } = productDelete;
 
+  const productCreate = useSelector((state) => state.productCreate);
+  const {
+    success: successCreate,
+    error: errorCreate,
+    loading: loadingCreate,
+    product: createdProduct,
+  } = productCreate;
   useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
-      dispatch(listProducts());
-    } else {
+    dispatch({ type: PRODUCT_CREATE_RESET });
+    if (!userInfo.isAdmin) {
       navigate("/login");
     }
-  }, [dispatch, userInfo, successDelete]);
+    if (successCreate) {
+      navigate(`/admin/product/${createdProduct._id}/edit`);
+    } else {
+      dispatch(listProducts());
+    }
+  }, [dispatch, userInfo, successDelete, successCreate, createdProduct]);
 
   const deletHandeler = (id) => {
     if (window.confirm("Are you sure")) {
@@ -35,7 +51,7 @@ const ProductListScreen = () => {
   };
 
   const createProductHandler = () => {
-    console.log("create product soon");
+    dispatch(createProduct());
   };
   return (
     <>
