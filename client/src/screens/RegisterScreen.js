@@ -4,7 +4,9 @@ import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
-import { register } from "../actions/userActions";
+import { login, register } from "../actions/userActions";
+import { GoogleLogin } from "react-google-login";
+import axios from "axios";
 const RegisterScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,6 +32,23 @@ const RegisterScreen = () => {
       setMassage("password do not match");
     } else {
       dispatch(register(name, email, password));
+    }
+  };
+  const responseGoogle = async (response) => {
+    console.log("res", response);
+    try {
+      const res = await axios.post("/api/users/google_login", {
+        tokenId: response.tokenId,
+      });
+      console.log("res1", res.data);
+      setEmail(res.data.email);
+      setPassword(res.data.password);
+
+      // dispatch(register(name, email, password));
+      dispatch(login(email, password));
+    } catch (error) {
+      console.log("error");
+      alert("error");
     }
   };
   return (
@@ -86,7 +105,15 @@ const RegisterScreen = () => {
         >
           Register
         </Button>
-
+        <div className="hr">Or Login With</div>
+        <div className="social">
+          <GoogleLogin
+            clientId="971874584120-fa39pgif9p2tk3rqhmue4glhk02as2tf.apps.googleusercontent.com"
+            buttonText="Login with google"
+            onSuccess={responseGoogle}
+            cookiePolicy={"single_host_origin"}
+          />
+        </div>
         <Row className="py-3">
           <Col>
             Have an Account?{" "}

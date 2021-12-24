@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import { login } from "../actions/userActions";
 import image from "../phone.jpg";
+import { GoogleLogin } from "react-google-login";
+import axios from "axios";
+
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,6 +29,23 @@ const LoginScreen = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(login(email, password));
+  };
+  const responseGoogle = async (response) => {
+    console.log("res", response);
+    try {
+      const res = await axios.post("/api/users/google_login", {
+        tokenId: response.tokenId,
+      });
+      console.log("res1", res.data);
+      setEmail(res.data.email);
+      setPassword(res.data.password);
+
+      // dispatch(register(name, email, password));
+      // dispatch(login(email, password));
+    } catch (error) {
+      console.log("error");
+      alert("error");
+    }
   };
   return (
     <Row>
@@ -95,6 +115,15 @@ const LoginScreen = () => {
               </Link>
             </Col>
           </Row>
+          <div className="hr">Or Login With</div>
+          <div className="social">
+            <GoogleLogin
+              clientId="971874584120-fa39pgif9p2tk3rqhmue4glhk02as2tf.apps.googleusercontent.com"
+              buttonText="Login with google"
+              onSuccess={responseGoogle}
+              cookiePolicy={"single_host_origin"}
+            />
+          </div>
         </Form>
       </Col>
     </Row>

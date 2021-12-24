@@ -2,7 +2,11 @@ const User = require("../models/userModel");
 const generateToken = require("../utils/generateToken");
 const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
-
+const { google } = require("googleapis");
+const { OAuth2 } = google.auth;
+const client = new OAuth2(
+  "971874584120-fa39pgif9p2tk3rqhmue4glhk02as2tf.apps.googleusercontent.com"
+);
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
   const errors = validationResult(req);
@@ -101,10 +105,57 @@ const updateUserProfile = async (req, res) => {
     throw new Error("user dont found");
   }
 };
+const googleLogin = async (req, res) => {
+  try {
+    const { tokenId } = req.body;
+    const verify = await client.verifyIdToken({
+      idToken: tokenId,
+    });
+    console.log("ver", verify);
+    const { email_verified, email, name } = verify.payload;
+    const password = email + process.env.GOOGLE_SERCRET;
+    const passwordHash = await bcrypt.hash(password, 10);
+    if (!email_verified) return res.status(400).json({ msg: "email invalid" });
+
+    const user = await User.findOne({ email });
+    if (user) {
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch)
+        return res.status(400).json({ msg: "password is incorrect" });
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        token: generateToken(user._id),
+      });
+    } else {
+      const newUser = await User.create({
+        name,
+        email,
+        password: passwordHash,
+      });
+      await newUser.save();
+      console.log("user added");
+      res.json({
+        _id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        // password: newUser.password,
+        isAdmin: newUser.isAdmin,
+        token: generateToken(newUser._id),
+      });
+    }
+  } catch (error) {
+    res.status(404);
+    console.log("err", error);
+  }
+};
 module.exports = {
   registerUser,
   authUser,
   getUserProfile,
+  googleLogin,
   updateUserProfile,
   logOut,
 };

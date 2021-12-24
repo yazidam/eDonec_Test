@@ -6,11 +6,13 @@ const {
   getUserProfile,
   logOut,
   updateUserProfile,
+  googleLogin,
 } = require("../controllers/userController");
 const protect = require("../middleware/authMiddleware");
 const { validRegister } = require("../middleware/validation");
 
 router.post("/", validRegister, registerUser);
+router.post("/google_login", googleLogin);
 router.post("/login", authUser);
 router
   .route("/profile")
