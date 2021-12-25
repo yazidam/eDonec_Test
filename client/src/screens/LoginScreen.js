@@ -36,15 +36,16 @@ const LoginScreen = () => {
       const res = await axios.post("/api/users/google_login", {
         tokenId: response.tokenId,
       });
-      console.log("res1", res.data);
-      setEmail(res.data.email);
-      setPassword(res.data.password);
-
-      // dispatch(register(name, email, password));
-      // dispatch(login(email, password));
+      console.log("res1", res);
+      dispatch(
+        login(
+          res.data.email,
+          `${res.data.email}6V7E69P&^{9(fSvc}8r(Jf#?Q,Hq+yF,k$&KuAc~;=?wXA"w23`
+        )
+      );
     } catch (error) {
       console.log("error");
-      alert("error");
+      alert("vous avez changer votre mot de passe");
     }
   };
   return (
@@ -83,7 +84,6 @@ const LoginScreen = () => {
               onChange={(e) => setEmail(e.target.value)}
             ></Form.Control>
           </Form.Group>
-
           <Form.Group controlId="password" className="mx-5">
             <Form.Label>Password </Form.Label>
             <Form.Control
@@ -93,19 +93,26 @@ const LoginScreen = () => {
               onChange={(e) => setPassword(e.target.value)}
             ></Form.Control>
           </Form.Group>
-
           <Button
             type="submit"
             variant="primary"
             className="my-3 "
             disabled={email.length < 10}
-            className="mx-5 my-5"
+            className="mx-5 my-4"
             style={{ width: "60vh", borderRadius: "5px" }}
           >
             Sign In
           </Button>
 
-          <Row className="text-center">
+          <GoogleLogin
+            className="social"
+            clientId="971874584120-fa39pgif9p2tk3rqhmue4glhk02as2tf.apps.googleusercontent.com"
+            buttonText="Login with google"
+            onSuccess={responseGoogle}
+            cookiePolicy={"single_host_origin"}
+          />
+
+          <Row className="text-center my-4">
             <Col>
               New Coustomer?{" "}
               <Link
@@ -115,15 +122,6 @@ const LoginScreen = () => {
               </Link>
             </Col>
           </Row>
-          <div className="hr">Or Login With</div>
-          <div className="social">
-            <GoogleLogin
-              clientId="971874584120-fa39pgif9p2tk3rqhmue4glhk02as2tf.apps.googleusercontent.com"
-              buttonText="Login with google"
-              onSuccess={responseGoogle}
-              cookiePolicy={"single_host_origin"}
-            />
-          </div>
         </Form>
       </Col>
     </Row>

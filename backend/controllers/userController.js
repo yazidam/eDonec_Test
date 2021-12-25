@@ -129,6 +129,7 @@ const googleLogin = async (req, res) => {
         isAdmin: user.isAdmin,
         token: generateToken(user._id),
       });
+      console.log("login with oAuth");
     } else {
       const newUser = await User.create({
         name,
@@ -139,7 +140,7 @@ const googleLogin = async (req, res) => {
       console.log("user added");
       res.json({
         _id: newUser._id,
-        name: newUser.name,
+        name: newUser.name, //hethi eli t3ml register
         email: newUser.email,
         // password: newUser.password,
         isAdmin: newUser.isAdmin,
@@ -148,6 +149,7 @@ const googleLogin = async (req, res) => {
     }
   } catch (error) {
     res.status(404);
+
     console.log("err", error);
   }
 };

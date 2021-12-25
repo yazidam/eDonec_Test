@@ -4,9 +4,9 @@ import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
-import { login, register } from "../actions/userActions";
-import { GoogleLogin } from "react-google-login";
-import axios from "axios";
+import { register } from "../actions/userActions";
+// import { GoogleLogin } from "react-google-login";
+// import axios from "axios";
 const RegisterScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,27 +34,31 @@ const RegisterScreen = () => {
       dispatch(register(name, email, password));
     }
   };
-  const responseGoogle = async (response) => {
-    console.log("res", response);
-    try {
-      const res = await axios.post("/api/users/google_login", {
-        tokenId: response.tokenId,
-      });
-      console.log("res1", res.data);
-      setEmail(res.data.email);
-      setPassword(res.data.password);
+  // const responseGoogle = async (response) => {
+  //   console.log("res", response);
+  //   try {
+  //     const res = await axios.post("/api/users/google_login", {
+  //       tokenId: response.tokenId,
+  //     });
+  //     console.log("res1", res.data);
+  //     setEmail(res.data.email);
+  //     setPassword(res.data.password);
 
-      // dispatch(register(name, email, password));
-      dispatch(login(email, password));
-    } catch (error) {
-      console.log("error");
-      alert("error");
-    }
-  };
+  //     // dispatch(register(name, email, password));
+  //     dispatch(login(email, password));
+  //   } catch (error) {
+  //     console.log("error");
+  //     alert("error");
+  //   }
+  // };
   return (
     <FormContainer>
       <h1 className="text-center"> Sign UP</h1>
-      {error && <h2>verifier votre coordonner {error}</h2>}
+      {error && (
+        <h2>
+          verifier votre coordonner votre password ou votre email deja utilise
+        </h2>
+      )}
       {error && <h3 variant="danger">{message}</h3>}
       {loading && <Loader />}
       <Form onSubmit={submitHandler}>
@@ -105,7 +109,7 @@ const RegisterScreen = () => {
         >
           Register
         </Button>
-        <div className="hr">Or Login With</div>
+        {/* <div className="hr">Or Login With</div>
         <div className="social">
           <GoogleLogin
             clientId="971874584120-fa39pgif9p2tk3rqhmue4glhk02as2tf.apps.googleusercontent.com"
@@ -113,7 +117,7 @@ const RegisterScreen = () => {
             onSuccess={responseGoogle}
             cookiePolicy={"single_host_origin"}
           />
-        </div>
+        </div> */}
         <Row className="py-3">
           <Col>
             Have an Account?{" "}
